@@ -83,6 +83,8 @@ Function CloseStatus ()
 End Function
 
 Function getFileDate ()
+	Dim myResult
+	
 	myResult = ""
 	sFileName = cFile.Name
 	

@@ -11,6 +11,32 @@ Function timeStamp (cTime)
 		Right ("0" & Second(cTime),2) 
 End Function
 
+Function isImgFile ()
+	isImgFile = ""
+	sFileName = cFile.Name
+	
+	If UCASE (Left (sFileName, 5)) = "PANO_" Then
+		isImgFile = "PANO_"
+	ElseIf UCASE (Left (sFileName, 4)) = "IMG_" Then
+		isImgFile = "IMG_"
+	ElseIf UCASE (Left (sFileName, 4)) = "DIV_" Then
+		isImgFile = "DIV_"
+	ElseIf (UCASE (Left (sFileName, 11)) = "SCREENSHOT_") Then 
+		isImgFile = "SCREENSHOT_"
+	ElseIf (UCASE (Left (sFileName, 8)) = "MMEXPORT") And IsNumeric (MID (sFileName, 9, 13)) Then
+		isImgFile = "MMEXPORT_"
+	ElseIf (UCASE (Left (sFileName, 9)) = "MICROMSG.") And IsNumeric (MID (sFileName, 10, 13)) Then
+		isImgFile = "MICROMSG_"
+	ElseIf (UCASE (Left (sFileName, 10)) = "WX_CAMERA_") And IsNumeric (MID (sFileName, 11, 13)) Then
+		isImgFile = "WX_CAMERA_"
+	ElseIf IsNumeric (Left (sFileName, 13)) And (Mid (sFileName, 14, 1) = "." OR Mid (sFileName, 14, 1) = "(") Then
+		isImgFile = "IMG_"
+	ElseIf IsNumeric (Left (sFileName, 4)) And Mid (sFileName, 5, 1) = "_" And IsNumeric (Mid(sFileName, 6, 1)) Then
+		isImgFile = "IMG_"
+	End If
+End Function
+
+
 Function SetFileDateName ()
 	Dim sTargetName
 	Dim nIndex
@@ -21,12 +47,14 @@ Function SetFileDateName ()
 		If SetFileDateName <> "" Then
 			Select Case UCase (cFSO.GetExtensionName (cFile.Name))
 			Case "JPG", "PNG", "GIF"
-				If Left (cFile.Name, 4) = "IMG_" Then
-					sTargetName = "IMG_" & SetFileDateName
+				sTargetName = isImgFile ()
+				If sTargetName <> "" Then
+					sTargetName = sTargetName & SetFileDateName
 				End If
 			Case "MP4", "MOV"
-				If Left (cFile.Name, 4) = "DIV_" OR Left (cFile.Name, 4) = "IMG_" Then
-					sTargetName = "DIV_" & SetFileDateName 
+				sTargetName = isImgFile ()
+				If sTargetName <> "" Then
+					sTargetName = sTargetName & SetFileDateName
 				End If
 			End Select
 
