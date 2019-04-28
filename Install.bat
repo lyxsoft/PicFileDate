@@ -21,6 +21,13 @@ REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFileDateName" /v
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFileDateName\Command" /f
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFileDateName\Command" /ve /d "WScript.exe """%~dp0PicFileDateName.vbs""" """%%1""" %%*" /f
 
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder" /f
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder" /ve /d "Create Folder with Date Name" /f
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder" /v "Icon" /d "%SystemRoot%\System32\SHELL32.dll,313" /f
+
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder\Command" /f
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder\Command" /ve /d "WScript.exe """%~dp0PicNewDateFolder.vbs""" """%%1""" %%*" /f
+
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFileInfos" /f
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFileInfos" /ve /d "Show Picture Informations" /f
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFileInfos" /v "Icon" /d "%SystemRoot%\System32\SHELL32.dll,313" /f
