@@ -44,7 +44,13 @@ End Function
 
 
 Function StatusWindow ()
-	Set cIE=wscript.CreateObject("internetexplorer.application")
+	On Error Resume Next
+
+	Dim cHTML
+	
+	Set cHTML = wscript.Createobject("htmlfile")
+	
+	Set cIE = wscript.CreateObject("internetexplorer.application")
 	With cIE
 		.MenuBar=0 
 		.AddressBar=0
@@ -52,34 +58,43 @@ Function StatusWindow ()
 		.StatusBar=0
 		.Width=450
 		.Height=100
+		.Left = Fix((cHTML.ParentWindow.Screen.AvailWidth-.Width)/2)
+		.Top = Fix((cHTML.ParentWindow.Screen.AvailHeight-.Height)/2)
+
 		.Resizable=0 
-		.Navigate "about"&":blank"
-		'.Left = Fix((.Document.ParentWindow.Screen.AvailWidth-.Width)/2)
-		'.Top = Fix((.Document.ParentWindow.Screen.AvailHeight-.Height)/2)
+		.Navigate "about:blank"
+
 		.visible=1
+		
 		with .Document
 			.Write "<html><title>Status</title>" & vbCr
 			.write "<body scroll=no>" & vbCr
 			.write "<font color=#0066ff size=2 face=""Arial""><div id=StatusText align=center>Please wait...</div></font>" & vbCr
-			.write "</body></html>" & vbCr
+			.write "</body></html>"
 		End with
 	End With
 End Function
 
 Function ShowStatus (sStatus)
-	If cIE is Nothing Then
+	On Error Resume Next
+
+	If cIE.HWND = 0 Then
+		Set cIE = Nothing
 		StatusWindow
 	End If
 	
+	'wscript.CreateObject("Wscript.Shell").AppActivate cIE.HWND '"Status - Internet Explorer"
 	cIE.Document.getElementById("StatusText").innerText = sStatus
 End Function
 
 Function CloseStatus ()
+	On Error Resume Next
+
 	If NOT cIE is Nothing Then
 		cIE.Quit
 	End If
 	
-	set cIE = Nothing
+	Set cIE = Nothing
 End Function
 
 Function getFileDate ()
