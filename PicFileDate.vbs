@@ -30,12 +30,18 @@ End Function
 
 Function getNext2Number ()
 	If nPos > 0 Then
-		If (NOT IsNumeric (Mid (sFileName, nPos + 1, 1))) Then
-			getNext2Number = Mid (sFileName, nPos, 1)
-			nPos = nPos + 2		
-		ElseIf IsNumeric (Mid (sFileName, nPos, 2)) And (NOT IsNumeric (Mid (sFileName, nPos + 2, 1))) Then
-			getNext2Number = Mid (sFileName, nPos, 2)
-			nPos = nPos + 3
+		If IsNumeric (Mid (sFileName, nPos, 1)) Then
+			If (NOT IsNumeric (Mid (sFileName, nPos + 1, 1))) Then
+				getNext2Number = Mid (sFileName, nPos, 1)
+				nPos = nPos + 2		
+			Else
+				getNext2Number = Mid (sFileName, nPos, 2)
+				If (NOT IsNumeric (Mid (sFileName, nPos + 2, 1))) Then
+					nPos = nPos + 3
+				Else
+					nPos = nPos + 2
+				End If
+			End If
 		Else
 			nPos = 0
 		End If
@@ -141,7 +147,7 @@ Function getFileDate ()
 	getFileDate = ""
 	sFileName = cFile.Name
 	
-	If isFileID ("PANO_") OR isFileID ("IMG_") OR isFileID ("DIV_") OR isFileID ("SCREENSHOT_") OR isFileID ("SCANNER_") OR isFileID ("MMEXPORT") OR isFileID ("MICROMSG.") OR isFileID ("WX_CAMERA_") Then
+	If isFileID ("PANO_") OR isFileID ("IMG_") OR isFileID ("DIV_") OR isFileID ("VID_") OR isFileID ("SCREENSHOT_") OR isFileID ("SCANNER_") OR isFileID ("MMEXPORT") OR isFileID ("MICROMSG.") OR isFileID ("WX_CAMERA_") Then
 		getFileDate = getFileNameDateTime ()
 	ElseIf isFileID ("") Then
 		getFileDate = getFileNameDateTime ()

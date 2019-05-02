@@ -53,7 +53,7 @@ Function StatusWindow ()
 		.Resizable=0 
 
 		.Width=450
-		.Height=100
+		.Height=180
 		.Left = Fix((cHTML.ParentWindow.Screen.AvailWidth-.Width)/2)
 		.Top = Fix((cHTML.ParentWindow.Screen.AvailHeight-.Height)/2)
 
@@ -123,7 +123,7 @@ Function SetFileDateName (bShowStatus)
 					sTargetName = sTargetName & "_" & nIndex
 				End If
 				If bShowStatus Then
-					ShowStatus "Set File name [" & cFile.Name & "]."
+					ShowStatus "Set File name [" & cFile.Name & "]" & vbCrlf & "to" & vbCrlf & "[" & sTargetName & "]."
 				End If
 				cFile.Name = sTargetName & "." & cFSO.GetExtensionName (cFile.Name)
 			End If
