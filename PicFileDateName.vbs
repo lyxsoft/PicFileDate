@@ -156,6 +156,7 @@ For Each Arg In WScript.Arguments
 		StatusWindow
 		set cThisFolder = cFSO.GetFolder (Arg)
 		DoFolder cThisFolder
+		CloseStatus
 	End If
 Next
 

@@ -56,22 +56,23 @@ Function StatusWindow ()
 		.AddressBar=0
 		.ToolBar=0 
 		.StatusBar=0
+		.Resizable=0 
+
 		.Width=450
 		.Height=100
 		.Left = Fix((cHTML.ParentWindow.Screen.AvailWidth-.Width)/2)
 		.Top = Fix((cHTML.ParentWindow.Screen.AvailHeight-.Height)/2)
 
-		.Resizable=0 
 		.Navigate "about:blank"
 
-		.visible=1
-		
 		with .Document
 			.Write "<html><title>Status</title>" & vbCr
 			.write "<body scroll=no>" & vbCr
 			.write "<font color=#0066ff size=2 face=""Arial""><div id=StatusText align=center>Please wait...</div></font>" & vbCr
 			.write "</body></html>"
 		End with
+		
+		.visible=1	
 	End With
 End Function
 
@@ -137,7 +138,7 @@ Function getFileDate ()
 			myResult = ""
 		End If
 	End If
-	
+
 	If myResult = "" Then
 		Dim cFolder, cFileItem
 		
