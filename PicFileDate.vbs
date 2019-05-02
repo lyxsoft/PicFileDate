@@ -28,13 +28,13 @@ Function longToTime (nLong)
 	longToTime = DateSerial(1970, 1, 1) + (nLong / 86400000)
 End Function
 
-Function getNextNumber ()
+Function getNext2Number ()
 	If nPos > 0 Then
-		If Mid (sFileName, nPos + 1, 1) = "_" OR Mid (sFileName, nPos + 1, 1) = " " Then
-			getNextNumber = Mid (sFileName, nPos, 1)
+		If (NOT IsNumeric (Mid (sFileName, nPos + 1, 1))) Then
+			getNext2Number = Mid (sFileName, nPos, 1)
 			nPos = nPos + 2		
-		ElseIf IsNumeric (Mid (sFileName, nPos, 2)) And (Mid (sFileName, nPos + 2, 1) = "_" OR Mid (sFileName, nPos + 2, 1) = " ") Then
-			getNextNumber = Mid (sFileName, nPos, 2)
+		ElseIf IsNumeric (Mid (sFileName, nPos, 2)) And (NOT IsNumeric (Mid (sFileName, nPos + 2, 1))) Then
+			getNext2Number = Mid (sFileName, nPos, 2)
 			nPos = nPos + 3
 		Else
 			nPos = 0
@@ -98,48 +98,56 @@ Function CloseStatus ()
 	Set cIE = Nothing
 End Function
 
-Function getFileDate ()
-	Dim myResult
-	
-	myResult = ""
-	sFileName = cFile.Name
-	
-	If (UCASE (Left (sFileName, 5)) = "PANO_") And IsNumeric (Mid (sFileName, 6, 8)) AND IsNumeric (MID (sFileName, 15,6)) Then
-		myResult = Mid (sFileName, 6, 4) & "/" & Mid(sFileName,10, 2) & "/" & Mid(sFileName, 12, 2) & " " & Mid(sFileName, 15, 2) & ":" & Mid(sFileName, 17, 2) & ":" & Mid(sFileName, 19, 2)
-	ElseIf (UCASE (Left (sFileName, 4)) = "IMG_" OR UCASE (Left (sFileName, 4)) = "VID_") And IsNumeric (Mid (sFileName, 5, 8)) AND IsNumeric (MID (sFileName, 14,6)) Then
-		myResult = Mid (sFileName, 5, 4) & "/" & Mid(sFileName, 9, 2) & "/" & Mid(sFileName, 11, 2) & " " & Mid(sFileName, 14, 2) & ":" & Mid(sFileName, 16, 2) & ":" & Mid(sFileName, 18, 2)
-	ElseIf (UCASE (Left (sFileName, 11)) = "SCREENSHOT_") Then 'And IsNumeric (Mid (sFileName, 12, 4)) AND IsNumeric (MID (sFileName, 17,2)) AND IsNumeric (MID (sFileName, 20,2)) AND IsNumeric (MID (sFileName, 23,2)) AND IsNumeric (MID (sFileName, 26,2)) AND IsNumeric (MID (sFileName, 29,2)) Then
-		'myResult = Mid (sFileName, 12, 4) & "/" & Mid(sFileName, 17, 2) & "/" & Mid(sFileName, 20, 2) & " " & Mid(sFileName, 23, 2) & ":" & Mid(sFileName, 26, 2) & ":" & Mid(sFileName, 29, 2)
-		myResult = Mid (sFileName, 12, 4) & "/"
-		nPos = 17
-		myResult = myResult & getNextNumber () & "/"
-		myResult = myResult & getNextNumber () & " "
-		myResult = myResult & getNextNumber () & ":"
-		myResult = myResult & getNextNumber ()
-		If nPos = 0 Then
-			myResult = ""
-		End If		
-	ElseIf IsNumeric (Left (sFileName, 13)) And (Mid (sFileName, 14, 1) = "." OR Mid (sFileName, 14, 1) = "(") Then
-		myResult = timeString(longToTime(Left (sFileName, 13)))
-	ElseIf (UCASE (Left (sFileName, 8)) = "MMEXPORT") And IsNumeric (MID (sFileName, 9, 13)) Then
-		myResult = timeString(longToTime(MID (sFileName, 9, 13)))
-	ElseIf (UCASE (Left (sFileName, 9)) = "MICROMSG.") And IsNumeric (MID (sFileName, 10, 13)) Then
-		myResult = timeString(longToTime(MID (sFileName, 10, 13)))
-	ElseIf (UCASE (Left (sFileName, 10)) = "WX_CAMERA_") And IsNumeric (MID (sFileName, 11, 13)) Then
-		myResult = timeString(longToTime(MID (sFileName, 11, 13)))
-	ElseIf IsNumeric (Left (sFileName, 4)) And Mid (sFileName, 5, 1) = "_" And IsNumeric (Mid(sFileName, 6, 1)) Then
-		myResult = Left (sFileName, 4) & "/"
-		nPos = 6
-		myResult = myResult & getNextNumber () & "/"
-		myResult = myResult & getNextNumber () & " "
-		myResult = myResult & getNextNumber () & ":"
-		myResult = myResult & getNextNumber ()
-		If nPos = 0 Then
-			myResult = ""
+Function isFileID (sID)
+	If sID <> "" Then
+		isFileID = UCase (Left (sFileName, Len(sID))) = UCase(sID)
+		If isFileID Then
+			nPos = Len (sID) + 1
+		End If
+	Else
+		isFileID = True
+		nPos = 1
+	End If
+End Function
+
+Function getFileNameDateTime ()
+	getFileNameDateTime = ""
+
+	If nPos > 0 Then
+		If IsNumeric (Mid (sFileName, nPos, 8)) AND IsNumeric (MID (sFileName, nPos + 9,6)) Then
+			' Type: ID_YYYYMMDD_HHMMSS
+			getFileNameDateTime = Mid (sFileName, nPos, 4) & "/" & Mid(sFileName, nPos + 4, 2) & "/" & Mid(sFileName, nPos + 6, 2) & " " & _
+								  Mid (sFileName, nPos + 9, 2) & ":" & Mid(sFileName, nPos + 11, 2) & ":" & Mid(sFileName, nPos + 13, 2)
+		ElseIf IsNumeric (Mid (sFileName, nPos, 4)) AND (NOT IsNumeric (Mid (sFileName, nPos + 4, 1))) Then
+			' Type: ID_YYYY-MM-DD-HH-MM-SS
+			getFileNameDateTime = Mid (sFileName, nPos, 4) & "/"
+			nPos = nPos + 5
+			getFileNameDateTime = getFileNameDateTime & getNext2Number () & "/"
+			getFileNameDateTime = getFileNameDateTime & getNext2Number () & " "
+			getFileNameDateTime = getFileNameDateTime & getNext2Number () & ":"
+			getFileNameDateTime = getFileNameDateTime & getNext2Number () & ":"
+			getFileNameDateTime = getFileNameDateTime & getNext2Number ()
+			If nPos = 0 Then
+				getFileNameDateTime = ""
+			End If
+		ElseIf IsNumeric (Mid (sFileName, nPos, 13)) And (NOT IsNumeric (Mid (sFileName, nPos + 14, 1))) Then
+			' File name is the long number of seconds from 1970-1-1
+			getFileNameDateTime = timeString(longToTime(MID (sFileName, nPos, 13)))
 		End If
 	End If
+End Function
 
-	If myResult = "" Then
+Function getFileDate ()
+	getFileDate = ""
+	sFileName = cFile.Name
+	
+	If isFileID ("PANO_") OR isFileID ("IMG_") OR isFileID ("DIV_") OR isFileID ("SCREENSHOT_") OR isFileID ("SCANNER_") OR isFileID ("MMEXPORT") OR isFileID ("MICROMSG.") OR isFileID ("WX_CAMERA_") Then
+		getFileDate = getFileNameDateTime ()
+	ElseIf isFileID ("") Then
+		getFileDate = getFileNameDateTime ()
+	End If
+
+	If getFileDate = "" Then
 		Dim cFolder, cFileItem
 		
 		Set cFolder = cShellApp.NameSpace (cFile.ParentFolder.Path)
@@ -151,18 +159,16 @@ Function getFileDate ()
 		If myDate = "" Then
 			myDate = cFolder.GetDetailsOf (cFileItem, 208) 'MediaCreateDate
 		End If
-		myResult = ""
+		getFileDate = ""
 		For nByte = 1 to Len(myDate)
 			If Asc(Mid(myDate, nByte, 1)) <> 63 Then
-				myResult = myResult & Mid(myDate, nByte, 1)
+				getFileDate = getFileDate & Mid(myDate, nByte, 1)
 			End If
 		Next
 		
 		Set cFileItem = Nothing
 		Set cFolder = Nothing
 	End If
-	
-	getFileDate = myResult
 End Function
 
 Function DoFile (bShowStatus)
@@ -172,7 +178,7 @@ Function DoFile (bShowStatus)
 			If bShowStatus Then
 				ShowStatus "Set File Date of [" & cFile.Name & "]."
 			End If
-			cShell.Run """" & sFDatePath & """ """ & cFile.Path & """ """ & getFileDate() & """", 0, 0
+			cShell.Run """" & sFDatePath & """ """ & cFile.Path & """ """ & sFileDate & """", 0, 0
 		End If
 	End If
 End Function
