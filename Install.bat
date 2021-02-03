@@ -28,6 +28,13 @@ REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder" /
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder\Command" /f
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder\Command" /ve /d "WScript.exe """%~dp0PicNewDateFolder.vbs""" """%%1""" %%*" /f
 
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFolderFilesToYearFolder" /f
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFolderFilesToYearFolder" /ve /d "Put File into Folder with Year of the File" /f
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFolderFilesToYearFolder" /v "Icon" /d "%SystemRoot%\System32\SHELL32.dll,313" /f
+
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder\Command" /f
+REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicNewDateFolder\Command" /ve /d "WScript.exe """%~dp0PicFolderFilesToYearFolder.vbs""" """%%1""" %%*" /f
+
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFileInfos" /f
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFileInfos" /ve /d "Show Picture Informations" /f
 REG ADD "HKCU\Software\Classes\*\shell\LyxSoft\shell\LyxSoft.PicFileInfos" /v "Icon" /d "%SystemRoot%\System32\SHELL32.dll,313" /f
@@ -53,6 +60,13 @@ REG ADD "HKCU\Software\Classes\Folder\shell\LyxSoft\shell\LyxSoft.PicFileDateNam
 
 REG ADD "HKCU\Software\Classes\Folder\shell\LyxSoft\shell\LyxSoft.PicFileDateName\Command" /f
 REG ADD "HKCU\Software\Classes\Folder\shell\LyxSoft\shell\LyxSoft.PicFileDateName\Command" /ve /d "WScript.exe """%~dp0PicFileDateName.vbs""" """%%1""" %%*" /f
+
+REG ADD "HKCU\Software\Classes\Folder\shell\LyxSoft\shell\LyxSoft.PicFolderFilesToYearFolder" /f
+REG ADD "HKCU\Software\Classes\Folder\shell\LyxSoft\shell\LyxSoft.PicFolderFilesToYearFolder" /ve /d "Put File into Folder with Year of the File" /f
+REG ADD "HKCU\Software\Classes\Folder\shell\LyxSoft\shell\LyxSoft.PicFolderFilesToYearFolder" /v "Icon" /d "%SystemRoot%\System32\SHELL32.dll,313" /f
+
+REG ADD "HKCU\Software\Classes\Folder\shell\LyxSoft\shell\LyxSoft.PicFolderFilesToYearFolder\Command" /f
+REG ADD "HKCU\Software\Classes\Folder\shell\LyxSoft\shell\LyxSoft.PicFolderFilesToYearFolder\Command" /ve /d "WScript.exe """%~dp0PicFolderFilesToYearFolder.vbs""" """%%1""" %%*" /f
 
 CLS
 ECHO Install done.
